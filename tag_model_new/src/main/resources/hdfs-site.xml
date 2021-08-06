@@ -8,11 +8,11 @@
   </property>
   <property>
     <name>dfs.namenode.servicerpc-address</name>
-    <value>master01:8022</value>
+    <value>hadoop004:8022</value>
   </property>
   <property>
     <name>dfs.https.address</name>
-    <value>master01:9871</value>
+    <value>hadoop004:9871</value>
   </property>
   <property>
     <name>dfs.https.port</name>
@@ -20,7 +20,7 @@
   </property>
   <property>
     <name>dfs.namenode.http-address</name>
-    <value>master01:9870</value>
+    <value>hadoop004:9870</value>
   </property>
   <property>
     <name>dfs.replication</name>

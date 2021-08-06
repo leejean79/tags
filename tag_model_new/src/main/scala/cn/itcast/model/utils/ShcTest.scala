@@ -17,12 +17,12 @@ object ShcTest {
     s"""
       |{
       |    "table": {
-      |        "namespace": "default", "name": "tbl_users"
+      |        "namespace": "default", "name": "ods_payment_info"
       |    },
-      |    "rowkey": "id",
+      |    "rowkey": "user_id",
       |    "columns": {
-      |        "id": {"cf": "rowkey", "col": "id", "type": "string"},
-      |        "userName": {"cf": "default", "col": "username", "type": "string"}
+      |        "user_id": {"cf": "rowkey", "col": "user_id", "type": "string"},
+      |        "alipay_trade_no": {"cf": "default", "col": "alipay_trade_no", "type": "string"}
       |    }
       |}
       |""".stripMargin
@@ -30,7 +30,7 @@ object ShcTest {
     // 1.2. 使用 Spark 连接 HBase
     val spark = SparkSession.builder()
       .appName("shc test")
-      .master("local[5]")
+      .master("local[*]")
       .getOrCreate()
 
     val source: DataFrame = spark.read
@@ -47,16 +47,17 @@ object ShcTest {
          |    "table": {
          |        "namespace": "default", "name": "tbl_test1"
          |    },
-         |    "rowkey": "id",
+         |    "rowkey": "user_id",
          |    "columns": {
-         |        "id": {"cf": "rowkey", "col": "id", "type": "string"},
-         |        "userName": {"cf": "default", "col": "username", "type": "string"}
+         |        "user_id": {"cf": "rowkey", "col": "user_id", "type": "string"},
+         |        "alipay_trade_no": {"cf": "default", "col": "alipay_trade_no", "type": "string"}
          |    }
          |}
          |""".stripMargin
 
     source.write
       .option(HBaseTableCatalog.tableCatalog, catalogWrite)
+//      创建hbase表时设置预分区region为5
       .option(HBaseTableCatalog.newTable, "5")
       .format("org.apache.spark.sql.execution.datasources.hbase")
       .save()

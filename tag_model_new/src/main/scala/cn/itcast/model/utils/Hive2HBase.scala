@@ -10,6 +10,7 @@ import org.apache.hadoop.hbase.tool.LoadIncrementalHFiles
 import org.apache.hadoop.hbase.util.Bytes
 import org.apache.hadoop.hbase.{HBaseConfiguration, KeyValue, TableName}
 import org.apache.hadoop.mapreduce.Job
+import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.{Dataset, Row, SparkSession}
 
 object Hive2HBase {
@@ -74,7 +75,7 @@ object Hive2HBase {
     val source: Dataset[Row] = spark.read.table(s"$db.$table")
 
     // 2. 处理数据, (ImmutableBytesWritable, KeyValue)
-    val transfer = source.rdd
+    val transfer: RDD[(ImmutableBytesWritable, KeyValue)] = source.rdd
       // 因为 map 是对一整行数据进行转换, 但是最终的出口应该多个单元格的数据 KV
       // 所以使用 flatMap, row -> convert -> multi cell KV
       .filter(row => row.getAs(keyField) != null)

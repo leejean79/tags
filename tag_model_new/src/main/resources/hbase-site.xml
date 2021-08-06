@@ -4,7 +4,7 @@
 <configuration>
   <property>
     <name>hbase.rootdir</name>
-    <value>hdfs://master01:8020/hbase</value>
+    <value>hdfs://hadoop004:8020/hbase</value>
   </property>
   <property>
     <name>hbase.client.write.buffer</name>
@@ -92,7 +92,7 @@
   </property>
   <property>
     <name>hbase.zookeeper.quorum</name>
-    <value>master01</value>
+    <value>hadoop006,hadoop004,hadoop005</value>
   </property>
   <property>
     <name>hbase.zookeeper.property.clientPort</name>
