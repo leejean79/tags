@@ -19,6 +19,21 @@ object ShcUtils {
    */
   def read(tableName: String, inFields: Array[String], columnFamily: String, spark: SparkSession): DataFrame = {
     // 1. 处理 Columns 对象
+    //case class HBaseColumn(cf: String, col: String, `type`: String)
+    /*
+    s"""
+      |{
+      |    "table": {
+      |        "namespace": "default", "name": "ods_payment_info"
+      |    },
+      |    "rowkey": "user_id",
+      |    "columns": {
+      |        "user_id": {"cf": "rowkey", "col": "user_id", "type": "string"},
+      |        "alipay_trade_no": {"cf": "default", "col": "alipay_trade_no", "type": "string"}
+      |    }
+      |}
+      |"""
+     */
     val columns = mutable.HashMap.empty[String, HBaseColumn]
     columns += HBASE_ROWKEY_FIELD -> HBaseColumn("rowkey", HBASE_ROWKEY_FIELD, HBASE_COLUMN_DEFAULT_TYPE)
     for (field <- inFields) {
@@ -26,6 +41,7 @@ object ShcUtils {
     }
 
     // 2. 处理 HBaseTable 对象
+    //case class HBaseTable(namespace: String, name: String)
     val table = HBaseTable(HBASE_NAMESPACE, tableName)
 
     // 3. 拼装 Catalog 对象

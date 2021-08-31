@@ -28,8 +28,8 @@ object GenderModel {
     // 1. 读取 MySQL 的四级标签和五级标签数据
     val (fourTag, fiveTags) = readBasicTag()
 
-    // 2. 通过四级标签, 读取元数据
-    // 3. 处理元数据, 处理成结构化的方式
+    // 2. 通过四级标签, 读取源数据
+    // 3. 处理源数据, 处理成结构化的方式
     val metaData = readMetaData(fourTag.id)
 
     // 4. 使用元数据, 连接源表, 拿到源表数据
@@ -73,16 +73,16 @@ object GenderModel {
   }
 
   /**
-   * 读取并处理元数据
-   * 系统中支持三种类型的元数据: RDBMS, HDFS, HBase
+   * 读取并处理源数据
+   * 系统中支持三种类型的数据源: RDBMS, HDFS, HBase
    * 所以要针对这些类型进行单独的处理
-   * 所以要区分开, 不同的元数据类型的数据
+   * 所以要区分开, 不同的源数据类型的数据
    */
   def readMetaData(fourTagID: String): MetaData = {
     import org.apache.spark.sql.functions._
     import spark.implicits._
 
-    // 1. 元数据表的配置
+    // 1. 源数据表的配置
     val url = config.getString("jdbc.basic_tag.url")
     val table = config.getString("jdbc.meta_data.table")
     val matchColumn = config.getString("jdbc.meta_data.match_column")
@@ -101,7 +101,7 @@ object GenderModel {
 
   /**
    * 根据元数据的类型, 读取不同的数据库中的表
-   * @param metaData 元数据
+   * @param metaData 源数据
    */
   def createSource(metaData: MetaData): (DataFrame, CommonMeta) = {
     // 判断是否是 HBase
